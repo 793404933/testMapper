@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+   <!-- 采用注解的方式配置bean -->    
+    <context:annotation-config />    
+    <!-- 配置要扫描的包 -->    
+    <context:component-scan base-package="com.lgh.*"></context:component-scan>        
+    <!-- 加载 jdbc.properties 配置文件 -->  
+    <bean  
+       class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+       <property name="locations">  
+          <list>  
+            <value>classpath:jdbc.properties</value>  
+           </list>  
+       </property>  
+    </bean>  
+    
+  <!--数据源的配配置  -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">  
+       <property name="driverClassName" value="${jdbc.driverClassName}" />
+       <property name="url" value="${jdbc.url}" />
+       <property name="username" value="${jdbc.username}" />
+       <property name="password" value="${jdbc.password}" />
+    </bean>
+  
+    <!-- sqlSessionFactory 的配置 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+       <property name="dataSource" ref="dataSource" />  
+       <!-- mybatis配置文件  mybatis配置文件中包含bean类的映射文件 -->  
+       <property name="configLocation" value="classpath:mybatis.xml" />  
+    </bean>  
+    
+    <!-- 配置SqlSessionTemplate -->    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">    
+       <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />    
+    </bean>  
+    
+    <!--自动扫描mapper类，然后自动为我们注册对应的MapperFactoryBean对象   -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+       <property name="basePackage" value="com.lgh.dao"/>  
+       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
+    </bean>   
+       
+    <!-- (事务管理)transaction manager,user JtaTransaction for globla tx -->  
+    <bean id="transactionManager"  
+       class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+       <property name="dataSource" ref="dataSource"/>  
+    </bean>     
+</beans>

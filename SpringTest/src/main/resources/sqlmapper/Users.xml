@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，作用就是对sql进行分类管理，理解sql隔离
+注意:使用mapper代理方法的代理，namespace有特殊的作用
+-->
+<!-- <typeAlias type="com.lgh.pojo.Users" alias="_User"/>  取别名-->
+<mapper namespace="com.lgh.dao.UserDao">
+
+<select id="findUserById" parameterType="String" resultType = "com.lgh.pojo.Users">
+select * from Users where user_id = #{value}
+</select>
+
+ <!--执行增加操作的SQL语句。id和parameterType分别与IUserOperation接口中的addUser方法的名字和参数类型一致。
+ useGeneratedKeys设置为"true"表明要MyBatis获取由数据库自动生成的主键；keyProperty="user_id"指定把获取到的主键值注入到User的_user_id属性--> 
+<insert id="addUser" parameterType="com.lgh.pojo.Users" useGeneratedKeys="true" keyProperty="user_id">
+insert into Users(user_id,user_name,user_years)
+values (#{user_id},#{user_name},#{user_years})
+</insert>
+
+<update id="updateUser" parameterType="com.lgh.pojo.Users">
+update Users set user_name=#{user_name},user_years=#{user_years} where user_id=#{user_id}
+</update>
+
+ <delete id="deleteUser" parameterType="String">
+    delete from Users where user_id=#{user_id}
+</delete>
+</mapper>
