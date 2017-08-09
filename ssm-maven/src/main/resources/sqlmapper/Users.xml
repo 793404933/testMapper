@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，作用就是对sql进行分类管理，理解sql隔离
+注意:使用mapper代理方法的代理，namespace有特殊的作用
+-->
+<!-- <typeAlias type="com.lgh.pojo.Users" alias="_User"/>  取别名-->
+<mapper namespace="com.lgh.dao.UserDao">
+
+<select id="findUserById" parameterType="String" resultType = "com.lgh.pojo.Users">
+select * from user_t where user_id = #{value}
+</select>
+<select id="loginJudge"  resultType = "com.lgh.pojo.Users">
+select * from user_t where user_id=#{0} and password=#{1} 
+</select>
+</mapper>
